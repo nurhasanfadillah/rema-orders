@@ -518,10 +518,12 @@ export default function App() {
   const totalPages = Math.ceil(totalCount / pageSize);
 
   return (
-    <div className="flex flex-col md:flex-row h-full bg-dark">
+    <div className="flex flex-col md:flex-row h-screen bg-dark overflow-hidden">
+
       
       {/* --- DESKTOP SIDEBAR (Visible on md+) --- */}
-      <aside className="hidden md:flex w-72 flex-col border-r border-zinc-800 bg-zinc-900/50 backdrop-blur-xl h-full sticky top-0">
+      <aside className="hidden md:flex w-72 flex-col border-r border-zinc-800 bg-zinc-900/50 backdrop-blur-xl h-full overflow-y-auto">
+
           <div className="p-6 border-b border-zinc-800 flex items-center justify-center">
              <img 
                src="https://lh3.googleusercontent.com/d/18psWwD9_5OGLeFlAZqG2-UxJgxbp3uUQ" 
@@ -600,7 +602,14 @@ export default function App() {
       </aside>
 
       {/* --- MAIN CONTENT AREA --- */}
-      <main className="flex-1 flex flex-col h-full md:overflow-hidden relative">
+      <main className="flex-1 flex flex-col relative overflow-y-auto h-full">
+
+
+
+
+
+
+
 
 
 
@@ -740,7 +749,14 @@ export default function App() {
         )}
 
         {/* --- VIEW CONTENT --- */}
-        <div className="flex-1 md:overflow-y-auto bg-dark/50 p-0 sm:p-0 md:p-6 relative">
+        <div className="bg-dark/50 p-0 sm:p-0 md:p-6 relative flex-1">
+
+
+
+
+
+
+
 
 
 
@@ -874,20 +890,22 @@ export default function App() {
 
                     {/* DESKTOP TABLE VIEW */}
 
-                    <div className="hidden md:block h-full pb-20">
+                    <div className="hidden md:block">
                         <DesktopTable 
                             orders={orders} 
                             onRowClick={(order) => { setActiveOrder(order); setView('DETAIL'); }}
                             isLoading={loading}
                         />
                     </div>
+
                 </>
             )}
         </div>
 
-        {/* DESKTOP PAGINATION (Fixed - only visible on md+) */}
+        {/* DESKTOP PAGINATION (Flow below content - only visible on md+) */}
         {view === 'LIST' && (
-             <div className="hidden md:flex fixed bottom-0 left-0 right-0 md:left-72 z-40 bg-zinc-900/90 backdrop-blur-xl border-t border-white/10 pb-6 pt-3 px-4 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] flex-col sm:flex-row justify-between items-center gap-3">
+             <div className="hidden md:flex bg-zinc-900/90 backdrop-blur-xl border-t border-white/10 pb-6 pt-3 px-4 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] flex-col sm:flex-row justify-between items-center gap-3 mt-6">
+
 
 
 

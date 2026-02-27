@@ -376,7 +376,7 @@ export const OrderForm: React.FC<Props> = ({ onBack, onSubmit, initialData, mode
   }));
 
   return (
-    <div className="flex flex-col h-full relative">
+    <div className="flex flex-col min-h-full">
       {/* Mobile Header - Hidden on Desktop since layout handles it */}
       <div className="md:hidden glass-header sticky top-0 z-20 px-4 py-4 flex items-center gap-3">
         <button onClick={onBack} className="p-2 -ml-2 text-zinc-400 rounded-xl hover:bg-zinc-800 hover:text-white transition-all">
@@ -387,7 +387,9 @@ export const OrderForm: React.FC<Props> = ({ onBack, onSubmit, initialData, mode
         </h2>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-5 py-6 pb-32">
+      <div className="flex-1 px-5 py-6">
+
+
         
         {/* Copy Mode Indicator */}
         {isCopyMode && (
@@ -642,7 +644,8 @@ export const OrderForm: React.FC<Props> = ({ onBack, onSubmit, initialData, mode
       </div>
 
       {/* Footer Action */}
-      <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black via-black/95 to-transparent z-20">
+      <div className="relative p-4 bg-gradient-to-t from-black via-black/95 to-transparent z-20">
+
         <button
             onClick={handleSubmit}
             disabled={loading || isLocked}

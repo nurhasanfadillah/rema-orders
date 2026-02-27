@@ -12,8 +12,9 @@ interface Props {
 
 export const DesktopTable: React.FC<Props> = ({ orders, onRowClick, isLoading }) => {
   return (
-    <div className="w-full h-full overflow-hidden flex flex-col">
-      <div className="flex-1 overflow-auto rounded-xl border border-zinc-800 bg-zinc-900/40">
+    <div className="w-full">
+      <div className="rounded-xl border border-zinc-800 bg-zinc-900/40">
+
         <table className="w-full text-left border-collapse">
           <thead className="bg-zinc-800/80 text-zinc-400 text-xs uppercase font-bold sticky top-0 z-10 backdrop-blur-md">
             <tr>
