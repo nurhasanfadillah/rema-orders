@@ -4,7 +4,9 @@ import { Order, OrderStatus, ViewState, OrderRow } from './types';
 import { OrderForm } from './components/OrderForm';
 import { OrderDetail } from './components/OrderDetail';
 import { StatusBadge } from './components/StatusBadge';
+import { SearchableSelect } from './components/SearchableSelect';
 import { PlusIcon, SearchIcon, ChevronLeftIcon, ChevronRightIcon, SortDescIcon, SortAscIcon, DownloadIcon, InfoIcon, DatabaseIcon, ImageIcon, GlobeIcon, ZapIcon } from './components/icons';
+
 import { formatDate, mapRowToOrder, formatCurrency, generateOrderNo, getAllOrderFilePaths, getOrderAgeInfo } from './utils';
 import { supabase } from './supabase';
 import { Toast, ToastType } from './components/Toast';
@@ -703,50 +705,24 @@ export default function App() {
              ) : null}
         </div>
 
-        {/* --- MOBILE TABS (Hidden on md+) --- */}
+        {/* --- MOBILE STATUS DROPDOWN (Hidden on md+) --- */}
         {view === 'LIST' && (
-            <div className="md:hidden z-20 bg-dark/95 backdrop-blur-md border-b border-white/5 shadow-2xl shadow-black/50">
-
-
-
-                <div className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar py-3 px-4 gap-3">
-                    <button
-                    onClick={() => { setFilterStatus('ALL'); setPage(1); }}
-                    className={`snap-center flex-shrink-0 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border flex flex-col items-center min-w-[80px] ${
-                        filterStatus === 'ALL' 
-                        ? 'bg-zinc-100 text-zinc-900 border-white shadow-[0_0_15px_rgba(255,255,255,0.3)] scale-105' 
-                        : 'bg-zinc-800/50 text-zinc-400 border-zinc-700 hover:bg-zinc-800'
-                    }`}
-                    >
-                    <span className={`text-[11px] font-bold ${filterStatus === 'ALL' ? 'text-zinc-900' : 'text-zinc-300'}`}>
-                        {new Intl.NumberFormat('id-ID').format(qtyCounts['ALL'] || 0)} pcs
-                    </span>
-                    <span className={`text-[9px] mt-0.5 ${filterStatus === 'ALL' ? 'text-zinc-600' : 'text-zinc-500'}`}>
-                        {statusCounts['ALL'] || 0} orders
-                    </span>
-                    </button>
-                    {Object.values(OrderStatus).map((status) => (
-                    <button
-                        key={status}
-                        onClick={() => { setFilterStatus(status); setPage(1); }}
-                        className={`snap-center flex-shrink-0 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all border flex flex-col items-center min-w-[80px] ${
-                            filterStatus === status 
-                            ? 'bg-primary text-white border-primary shadow-[0_0_15px_rgba(220,38,38,0.4)] scale-105' 
-                            : 'bg-zinc-800/50 text-zinc-400 border-zinc-700 hover:bg-zinc-800'
-                        }`}
-                    >
-                        <span className={`text-[11px] font-bold ${filterStatus === status ? 'text-white' : 'text-zinc-300'}`}>
-                            {new Intl.NumberFormat('id-ID').format(qtyCounts[status] || 0)} pcs
-                        </span>
-                        <span className={`text-[9px] mt-0.5 ${filterStatus === status ? 'text-white/70' : 'text-zinc-500'}`}>
-                            {statusCounts[status] || 0} orders
-                        </span>
-                    </button>
-                    ))}
-                    <div className="w-2 flex-shrink-0"></div>
-                </div>
+            <div className="md:hidden z-20 bg-dark/95 backdrop-blur-md border-b border-white/5 shadow-2xl shadow-black/50 px-4 py-3">
+                <SearchableSelect
+                    options={[
+                        { value: 'ALL', label: `Semua Pesanan (${new Intl.NumberFormat('id-ID').format(qtyCounts['ALL'] || 0)} pcs, ${statusCounts['ALL'] || 0} orders)` },
+                        ...Object.values(OrderStatus).map((status) => ({
+                            value: status,
+                            label: `${status} (${new Intl.NumberFormat('id-ID').format(qtyCounts[status] || 0)} pcs, ${statusCounts[status] || 0} orders)`
+                        }))
+                    ]}
+                    value={filterStatus}
+                    onChange={(val) => { setFilterStatus(val as OrderStatus | 'ALL'); setPage(1); }}
+                    placeholder="Pilih Status"
+                />
             </div>
         )}
+
 
         {/* --- VIEW CONTENT --- */}
         <div className="bg-dark/50 p-0 sm:p-0 md:p-6 relative flex-1">
