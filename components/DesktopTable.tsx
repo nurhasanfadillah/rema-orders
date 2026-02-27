@@ -16,7 +16,8 @@ export const DesktopTable: React.FC<Props> = ({ orders, onRowClick, isLoading })
       <div className="rounded-xl border border-zinc-800 bg-zinc-900/40">
 
         <table className="w-full text-left border-collapse">
-          <thead className="bg-zinc-800/80 text-zinc-400 text-xs uppercase font-bold sticky top-0 z-10 backdrop-blur-md">
+          <thead className="bg-zinc-800/80 text-zinc-400 text-xs uppercase font-bold">
+
             <tr>
               <th className="p-4 border-b border-zinc-700 w-16 text-center">Preview</th>
               <th className="p-4 border-b border-zinc-700">Order No</th>
