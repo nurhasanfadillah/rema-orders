@@ -15,20 +15,22 @@ export const DesktopTable: React.FC<Props> = ({ orders, onRowClick, isLoading })
     <div className="w-full">
       <div className="rounded-xl border border-zinc-800 bg-zinc-900/40">
 
-        <table className="w-full text-left border-collapse">
+        <table className="w-full text-left border-separate border-spacing-0 table-fixed">
           <thead className="bg-zinc-800/80 text-zinc-400 text-xs uppercase font-bold">
-
             <tr>
-              <th className="p-4 border-b border-zinc-700 w-16 text-center">Preview</th>
-              <th className="p-4 border-b border-zinc-700">Order No</th>
-              <th className="p-4 border-b border-zinc-700">Customer</th>
-              <th className="p-4 border-b border-zinc-700">Produk</th>
-              <th className="p-4 border-b border-zinc-700 text-center">Qty</th>
-              <th className="p-4 border-b border-zinc-700 text-center">Status</th>
-              <th className="p-4 border-b border-zinc-700 text-center">Channel</th>
-              <th className="p-4 border-b border-zinc-700 text-right">Tanggal</th>
+              <th className="p-4 border-b border-zinc-700 w-16 text-center whitespace-nowrap rounded-tl-xl">Preview</th>
+              <th className="p-4 border-b border-zinc-700 whitespace-nowrap">Order No</th>
+              <th className="p-4 border-b border-zinc-700 whitespace-nowrap">Customer</th>
+              <th className="p-4 border-b border-zinc-700 whitespace-nowrap">Produk</th>
+              <th className="p-4 border-b border-zinc-700 text-center whitespace-nowrap">Qty</th>
+              <th className="p-4 border-b border-zinc-700 text-center whitespace-nowrap">Status</th>
+              <th className="p-4 border-b border-zinc-700 text-center whitespace-nowrap">Channel</th>
+              <th className="p-4 border-b border-zinc-700 text-right whitespace-nowrap rounded-tr-xl">Tanggal</th>
             </tr>
           </thead>
+
+
+
           <tbody className="divide-y divide-zinc-800">
             {isLoading ? (
                <tr>
