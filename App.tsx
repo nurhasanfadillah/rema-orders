@@ -600,7 +600,10 @@ export default function App() {
       </aside>
 
       {/* --- MAIN CONTENT AREA --- */}
-      <main className="flex-1 flex flex-col h-full overflow-hidden relative">
+      <main className="flex-1 flex flex-col h-full md:overflow-hidden relative">
+
+
+
         
         {/* --- DESKTOP HEADER (Visible on md+) --- */}
         <header className="hidden md:flex items-center justify-between px-6 py-4 border-b border-zinc-800 bg-zinc-900/80 backdrop-blur-md">
@@ -634,7 +637,10 @@ export default function App() {
         </header>
 
         {/* --- MOBILE HEADER (Hidden on md+) --- */}
-        <div className="md:hidden glass-header sticky top-0 z-30 pt-4 pb-2 px-4 border-b-0">
+        <div className="md:hidden glass-header z-30 pt-4 pb-2 px-4 border-b-0">
+
+
+
              {/* Only show full header in LIST view, simplified for others */}
              {view === 'LIST' ? (
                 <>
@@ -690,7 +696,10 @@ export default function App() {
 
         {/* --- MOBILE TABS (Hidden on md+) --- */}
         {view === 'LIST' && (
-            <div className="md:hidden sticky top-[210px] z-20 bg-dark/95 backdrop-blur-md border-b border-white/5 shadow-2xl shadow-black/50">
+            <div className="md:hidden z-20 bg-dark/95 backdrop-blur-md border-b border-white/5 shadow-2xl shadow-black/50">
+
+
+
                 <div className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar py-3 px-4 gap-3">
                     <button
                     onClick={() => { setFilterStatus('ALL'); setPage(1); }}
@@ -731,7 +740,10 @@ export default function App() {
         )}
 
         {/* --- VIEW CONTENT --- */}
-        <div className="flex-1 overflow-y-auto bg-dark/50 p-0 sm:p-0 md:p-6 relative">
+        <div className="flex-1 md:overflow-y-auto bg-dark/50 p-0 sm:p-0 md:p-6 relative">
+
+
+
             
             {view === 'FORM' && (
                <div className="w-full h-full md:max-w-4xl md:mx-auto">
@@ -761,7 +773,10 @@ export default function App() {
             {view === 'LIST' && (
                 <>
                     {/* MOBILE LIST VIEW */}
-                    <div className="md:hidden p-4 space-y-3 pb-40">
+                    <div className="md:hidden p-4 space-y-3">
+
+
+
                          {loading ? (
                             <div className="flex flex-col items-center justify-center py-20 opacity-50 space-y-4">
                                 <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
@@ -818,9 +833,47 @@ export default function App() {
                                 );
                             })
                          )}
+
+                         {/* MOBILE PAGINATION - At end of content */}
+                         <div className="mt-6 pt-4 pb-8 border-t border-white/10 flex flex-col gap-3">
+                             <div className="flex items-center justify-between">
+                                <span className="text-[10px] font-medium text-zinc-500">
+                                    Showing <span className="text-zinc-300">{(page - 1) * pageSize + 1}</span> - <span className="text-zinc-300">{Math.min(page * pageSize, totalCount)}</span> of <span className="text-zinc-300">{totalCount}</span>
+                                </span>
+                                <select 
+                                    value={pageSize}
+                                    onChange={(e) => { setPageSize(Number(e.target.value)); setPage(1); }}
+                                    className="bg-zinc-800 border border-zinc-700 text-zinc-300 text-xs rounded-lg px-2 py-1 outline-none focus:border-primary"
+                                >
+                                    <option value={10}>10 Baris</option>
+                                    <option value={25}>25 Baris</option>
+                                    <option value={50}>50 Baris</option>
+                                    <option value={100}>100 Baris</option>
+                                </select>
+                             </div>
+
+                             <div className="flex gap-3 items-center justify-center">
+                                <button 
+                                    onClick={() => setPage(p => Math.max(1, p - 1))}
+                                    disabled={page === 1}
+                                    className="h-10 px-4 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl disabled:opacity-30 disabled:cursor-not-allowed border border-zinc-700"
+                                >
+                                    <ChevronLeftIcon className="w-4 h-4" />
+                                </button>
+                                <span className="text-sm font-bold text-white">Page {page} / {totalPages || 1}</span>
+                                <button 
+                                    onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                                    disabled={page >= totalPages}
+                                    className="h-10 px-4 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl disabled:opacity-30 disabled:cursor-not-allowed border border-zinc-700"
+                                >
+                                    <ChevronRightIcon className="w-4 h-4" />
+                                </button>
+                             </div>
+                         </div>
                     </div>
 
                     {/* DESKTOP TABLE VIEW */}
+
                     <div className="hidden md:block h-full pb-20">
                         <DesktopTable 
                             orders={orders} 
@@ -832,9 +885,12 @@ export default function App() {
             )}
         </div>
 
-        {/* PAGINATION (Shared) */}
+        {/* DESKTOP PAGINATION (Fixed - only visible on md+) */}
         {view === 'LIST' && (
-             <div className="fixed bottom-0 left-0 right-0 md:left-72 z-40 bg-zinc-900/90 backdrop-blur-xl border-t border-white/10 pb-6 pt-3 px-4 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] flex flex-col sm:flex-row justify-between items-center gap-3">
+             <div className="hidden md:flex fixed bottom-0 left-0 right-0 md:left-72 z-40 bg-zinc-900/90 backdrop-blur-xl border-t border-white/10 pb-6 pt-3 px-4 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] flex-col sm:flex-row justify-between items-center gap-3">
+
+
+
                  <div className="flex items-center gap-3 w-full sm:w-auto justify-between">
                     <span className="text-[10px] font-medium text-zinc-500">
                         Showing <span className="text-zinc-300">{(page - 1) * pageSize + 1}</span> - <span className="text-zinc-300">{Math.min(page * pageSize, totalCount)}</span> of <span className="text-zinc-300">{totalCount}</span>
