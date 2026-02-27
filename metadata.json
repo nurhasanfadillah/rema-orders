@@ -1,0 +1,7 @@
+{
+  "name": "REMA Orders",
+  "description": "Redone Execution & Management Architecture - Aplikasi mobile-first untuk manajemen pesanan sablon dan custom printing.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

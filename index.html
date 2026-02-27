@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#dc2626" />
+    <meta name="description" content="Aplikasi manajemen pesanan sablon mobile-first." />
+    
+    <!-- iOS PWA Capable -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="REMA Orders" />
+    <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/d/1E_TIX8Jzq_S32RPCKJ6h5Pvcj1EkUsJX" />
+
+    <title>REMA Orders</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: '#dc2626', // Red 600
+              'primary-dark': '#7f1d1d', // Red 900
+              secondary: '#9ca3af', // Gray 400
+              success: '#059669', // Emerald 600
+              warning: '#d97706', // Amber 600
+              danger: '#ef4444', // Red 500
+              dark: '#09090b', // Zinc 950
+              surface: '#18181b', // Zinc 900
+            },
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+            animation: {
+              'fade-in': 'fadeIn 0.3s ease-out forwards',
+              'slide-up': 'slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+              'slide-down': 'slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+              'pop-in': 'popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+              'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              },
+              slideUp: {
+                '0%': { transform: 'translateY(20px)', opacity: '0' },
+                '100%': { transform: 'translateY(0)', opacity: '1' },
+              },
+              slideDown: {
+                '0%': { transform: 'translateY(-20px)', opacity: '0' },
+                '100%': { transform: 'translateY(0)', opacity: '1' },
+              },
+              popIn: {
+                '0%': { opacity: '0', transform: 'scale(0.9) translateY(10px)' },
+                '100%': { opacity: '1', transform: 'scale(1) translateY(0)' },
+              }
+            }
+          },
+        },
+      }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+        background: #09090b; /* Zinc 950 */
+        color: #f4f4f5; /* Zinc 100 */
+        -webkit-tap-highlight-color: transparent;
+        overscroll-behavior-y: none;
+      }
+      #root {
+        height: 100%;
+        width: 100%;
+      }
+      
+      /* Hide scrollbar */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      /* Desktop Layout Constraints - UPDATED FOR DASHBOARD MODE */
+      /* Removed the max-width: 640px constraint to allow full screen */
+      @media (min-width: 768px) {
+        body {
+          /* Reset centering for dashboard */
+          display: block; 
+          background-color: #0c0c0e;
+          background-image: none; /* Clean background for dashboard */
+        }
+        #root {
+          max-width: 100%; /* Full width */
+          height: 100%;
+          max-height: 100vh;
+          background: #09090b;
+          box-shadow: none;
+          position: relative;
+          overflow: hidden;
+        }
+      }
+
+      /* Custom Scrollbar for Desktop Table */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #18181b; 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #3f3f46; 
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #52525b; 
+      }
+
+      /* Dark Glassmorphism Utilities */
+      .glass {
+        background: rgba(24, 24, 27, 0.6);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      
+      .glass-card {
+        background: rgba(39, 39, 42, 0.6); /* Zinc 800 with opacity */
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      .glass-header {
+        background: rgba(9, 9, 11, 0.85);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .glass-modal {
+        background: rgba(24, 24, 27, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2",
+    "jspdf": "https://esm.sh/jspdf@2.5.1",
+    "jspdf-autotable": "https://esm.sh/jspdf-autotable@3.8.2",
+    "xlsx": "https://esm.sh/xlsx@0.18.5"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>

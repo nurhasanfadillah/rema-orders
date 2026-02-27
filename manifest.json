@@ -1,0 +1,62 @@
+{
+  "name": "REMA Orders",
+  "short_name": "REMA",
+  "start_url": "/",
+  "id": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#dc2626",
+  "description": "Redone Execution & Management Architecture - Aplikasi manajemen pesanan sablon dan custom printing mobile-first.",
+  "orientation": "portrait",
+  "categories": ["productivity", "business"],
+  "icons": [
+    {
+      "src": "https://lh3.googleusercontent.com/d/1E_TIX8Jzq_S32RPCKJ6h5Pvcj1EkUsJX",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://lh3.googleusercontent.com/d/1E_TIX8Jzq_S32RPCKJ6h5Pvcj1EkUsJX",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://lh3.googleusercontent.com/d/1E_TIX8Jzq_S32RPCKJ6h5Pvcj1EkUsJX",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "https://via.placeholder.com/400x800.png/09090b/FFFFFF?text=Order+List",
+      "sizes": "400x800",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Daftar Pesanan"
+    },
+    {
+      "src": "https://via.placeholder.com/400x800.png/09090b/FFFFFF?text=Order+Detail",
+      "sizes": "400x800",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Detail Pesanan"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Buat Pesanan",
+      "short_name": "Pesanan Baru",
+      "description": "Buat pesanan baru dengan cepat",
+      "url": "/?action=new_order",
+      "icons": [{ 
+        "src": "https://lh3.googleusercontent.com/d/1E_TIX8Jzq_S32RPCKJ6h5Pvcj1EkUsJX", 
+        "sizes": "96x96",
+        "type": "image/png"
+      }]
+    }
+  ]
+}
