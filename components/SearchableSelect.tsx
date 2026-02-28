@@ -1,6 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { ChevronDownIcon, SearchIcon, CheckCircleIcon } from './icons';
+import { ChevronDownIcon, CheckCircleIcon } from './icons';
+
 
 interface Option {
   value: string;
@@ -17,9 +18,8 @@ interface Props {
 
 export const SearchableSelect: React.FC<Props> = ({ options, value, onChange, placeholder = "Pilih...", disabled = false }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -32,18 +32,16 @@ export const SearchableSelect: React.FC<Props> = ({ options, value, onChange, pl
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Filter options based on search
-  const filteredOptions = options.filter(opt => 
-    opt.label.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredOptions = options;
+
 
   const selectedOption = options.find(opt => opt.value === value);
 
   const handleSelect = (val: string) => {
     onChange(val);
     setIsOpen(false);
-    setSearchTerm(''); // Reset search
   };
+
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -61,23 +59,8 @@ export const SearchableSelect: React.FC<Props> = ({ options, value, onChange, pl
       {/* Dropdown Menu */}
       {isOpen && (
         <div className="absolute z-50 w-full mt-2 bg-zinc-900 border border-zinc-700 rounded-xl shadow-2xl overflow-hidden animate-slide-down origin-top">
-          {/* Search Input */}
-          <div className="p-2 border-b border-zinc-800">
-             <div className="relative">
-                <SearchIcon className="absolute left-3 top-2.5 w-4 h-4 text-zinc-500" />
-                <input 
-                   ref={inputRef}
-                   type="text"
-                   autoFocus
-                   placeholder="Cari..."
-                   value={searchTerm}
-                   onChange={(e) => setSearchTerm(e.target.value)}
-                   className="w-full bg-zinc-800 rounded-lg pl-9 pr-3 py-2 text-sm text-white placeholder:text-zinc-600 outline-none focus:ring-1 focus:ring-primary/50"
-                />
-             </div>
-          </div>
-
           {/* Options List */}
+
           <div className="max-h-60 overflow-y-auto custom-scrollbar p-1">
              {filteredOptions.length > 0 ? (
                 filteredOptions.map((opt) => (
