@@ -570,7 +570,20 @@ npm run preview
 
 ---
 
-## 📝 Changelog
+## � Hasil Audit Teknis (Maret 2026)
+
+Berdasarkan audit teknis terhadap reliabilitas pengiriman data dan arsitektur *offline* PWA, berikut adalah temuan kritis dan rekomendasi:
+
+| Kategori | Temuan Masalah | Rekomendasi Perbaikan |
+|----------|----------------|-----------------------|
+| **Cache & Real-time (PWA)** | Penggunaan *Stale-While-Revalidate* yang mencegat semua request GET POSTGREST membuat UI menampilkan data kedaluwarsa sebelum direfresh manual. | Batasi caching API (`supabase.co/rest/*`) menggunakan *Network First* atau gunakan React Query untuk manajemen *stale time* yang lebih adaptif. |
+| **Upload File Sequential** | Upload file desain secara satu persatu berdampak risiko *orphaned files* (file tersimpan di storage tapi gagal masuk DB) jika koneksi putus di tengah jalan. | Gunakan `Promise.allSettled()` untuk pengunggahan paralel dan terapkan logika *rollback* (`storage.remove`) jika insert tabel gagal. |
+| **Dukungan Mutasi Offline** | Aplikasi PWA saat ini gagal (error network) ketika melakukan submit form/mutasi data dalam kondisi tanpa sinyal. | Integrasikan IndexedDB / Workbox Background Sync untuk membuat *Offline Mutation Queue* (menunda proses submit hingga jaringan kembali stabil). |
+| **Keamanan Storage** | Menyimpan seluruh file desain ke rantai URL yang mudah ditebak pada *public bucket* (berisiko *scraping/leak*). | Alihkan penyimpanan *design files* ke *Private Bucket* dan gunakan *Signed URLs* untuk otorisasi akses file secara temporal bagi pengguna berhak. |
+
+---
+
+## �📝 Changelog
 
 ### Versi Saat Ini (0.0.0)
 
@@ -583,8 +596,9 @@ npm run preview
 - ✅ Responsive design (mobile & desktop)
 - ✅ Sistem verifikasi keamanan
 - ✅ Copy/duplicate order
+- 📋 **[Audit Teknis]** Telah dilakukan dokumentasi terkait celah reliabilitas arsitektur submission, storage, dan service worker cache.
 
 ---
 
-**Dokumentasi ini terakhir diperbarui:** 2024  
+**Dokumentasi ini terakhir diperbarui:** Maret 2026  
 **Dibuat dengan ❤️ oleh Tim REMA**

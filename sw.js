@@ -79,6 +79,23 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Handle Supabase Data API (Network First Strategy)
+  // Prevents stale data from being shown in the React app for orders
+  if (url.hostname.includes('supabase.co') && url.pathname.includes('/rest/v1/')) {
+    event.respondWith(
+      fetch(event.request).then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200) {
+          const clone = networkResponse.clone();
+          caches.open(DYNAMIC_CACHE).then((cache) => cache.put(event.request, clone));
+        }
+        return networkResponse;
+      }).catch(() => {
+        return caches.match(event.request);
+      })
+    );
+    return;
+  }
+
   // Default Strategy: Stale-While-Revalidate
   // Serve from cache immediately, then update cache from network
   event.respondWith(
