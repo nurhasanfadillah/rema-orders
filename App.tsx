@@ -14,8 +14,8 @@ import { ConfirmationModal } from './components/Modal';
 import { ExportModal } from './components/ExportModal';
 import { PWAStatusModal } from './components/PWAStatusModal';
 import { DesktopTable } from './components/DesktopTable';
-import { CustomerManagementModal } from './components/CustomerManagementModal';
-import { ProductManagementModal } from './components/ProductManagementModal';
+import { CustomerPage } from './components/CustomerPage';
+import { ProductPage } from './components/ProductPage';
 
 import { getOfflineQueue, dequeueOfflineAction } from './utils/offlineQueue';
 import { uploadFiles } from './utils/uploadHelper';
@@ -45,8 +45,6 @@ export default function App() {
 
   const [showExportModal, setShowExportModal] = useState(false);
   const [showPwaModal, setShowPwaModal] = useState(false);
-  const [showCustomerModal, setShowCustomerModal] = useState(false);
-  const [showProductModal, setShowProductModal] = useState(false);
 
   // --- PWA State ---
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
@@ -622,18 +620,8 @@ export default function App() {
         onInstall={handleInstallPWA}
         isUpdateAvailable={isUpdateAvailable}
         onUpdate={handleUpdateApp}
-        onOpenCustomers={() => setShowCustomerModal(true)}
-        onOpenProducts={() => setShowProductModal(true)}
-      />
-      <CustomerManagementModal
-        isOpen={showCustomerModal}
-        onClose={() => setShowCustomerModal(false)}
-        onToast={showToast}
-      />
-      <ProductManagementModal
-        isOpen={showProductModal}
-        onClose={() => setShowProductModal(false)}
-        onToast={showToast}
+        onOpenCustomers={() => { setShowPwaModal(false); setView('CUSTOMERS'); }}
+        onOpenProducts={() => { setShowPwaModal(false); setView('PRODUCTS'); }}
       />
     </>
   );
@@ -711,6 +699,24 @@ export default function App() {
               </button>
             ))}
           </div>
+
+          <div className="space-y-1 mt-6 border-t border-zinc-800 pt-6">
+            <p className="px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">Master Data</p>
+            <button
+              onClick={() => setView('CUSTOMERS')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all group ${view === 'CUSTOMERS' ? 'bg-zinc-800 text-white shadow-lg' : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-200'}`}
+            >
+              <DatabaseIcon className="w-4 h-4" />
+              <span className="flex-1 text-left">Pelanggan</span>
+            </button>
+            <button
+              onClick={() => setView('PRODUCTS')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all group ${view === 'PRODUCTS' ? 'bg-zinc-800 text-white shadow-lg' : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-200'}`}
+            >
+              <DatabaseIcon className="w-4 h-4" />
+              <span className="flex-1 text-left">Produk</span>
+            </button>
+          </div>
         </div>
 
         <div className="p-4 border-t border-zinc-800">
@@ -740,7 +746,7 @@ export default function App() {
         {/* --- DESKTOP HEADER (Visible on md+) --- */}
         <header className="hidden md:flex items-center justify-between px-6 py-4 border-b border-zinc-800 bg-zinc-900/80 backdrop-blur-md">
           <h2 className="text-xl font-bold text-white">
-            {view === 'LIST' ? 'Dashboard Pesanan' : view === 'FORM' ? (mode === 'create' ? (activeOrder?.customerName ? 'Salin Pesanan' : 'Buat Pesanan Baru') : 'Edit Pesanan') : 'Detail Pesanan'}
+            {view === 'LIST' ? 'Dashboard Pesanan' : view === 'FORM' ? (mode === 'create' ? (activeOrder?.customerName ? 'Salin Pesanan' : 'Buat Pesanan Baru') : 'Edit Pesanan') : view === 'DETAIL' ? 'Detail Pesanan' : view === 'CUSTOMERS' ? 'Database Pelanggan' : 'Database Produk'}
           </h2>
 
           {view === 'LIST' && (
@@ -885,6 +891,14 @@ export default function App() {
                 onCopy={handleCopyOrder}
               />
             </div>
+          )}
+
+          {view === 'CUSTOMERS' && (
+            <CustomerPage onToast={showToast} />
+          )}
+
+          {view === 'PRODUCTS' && (
+            <ProductPage onToast={showToast} />
           )}
 
           {view === 'LIST' && (

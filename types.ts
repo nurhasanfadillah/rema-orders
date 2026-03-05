@@ -98,4 +98,4 @@ export interface Order {
   address?: string;
 }
 
-export type ViewState = 'LIST' | 'FORM' | 'DETAIL';
+export type ViewState = 'LIST' | 'FORM' | 'DETAIL' | 'CUSTOMERS' | 'PRODUCTS';
