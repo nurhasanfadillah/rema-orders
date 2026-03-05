@@ -59,7 +59,14 @@
 | **Delete Order** | Menghapus pesanan dan file terkait |
 | **Status Tracking** | Melacak status: Diproses → Sablon → Packing → Dikirim |
 
-### 2. Jenis Pesanan
+### 2. Manajemen Data Master
+
+| Fitur | Deskripsi |
+|-------|-----------|
+| **Database Pelanggan** | Manajemen data pelanggan (CRUD), dropdown searchable di form, dan auto-link sinkronisasi data lama. |
+| **Database Produk** | Manajemen data produk/item sablon (CRUD), dropdown searchable, dan auto-link untuk migrasi produk lawas. |
+
+### 3. Jenis Pesanan
 
 - **Custom Order**: Pesanan dengan desain kustom, mendukung upload file mentah dan preview
 - **Plain Order**: Pesanan polos tanpa desain khusus
@@ -162,6 +169,20 @@ rema-orders/
 | `address` | TEXT | Alamat pengiriman (offline) |
 | `created_at` | TIMESTAMP | Waktu pembuatan |
 | `updated_at` | TIMESTAMP | Waktu update terakhir |
+
+#### Tabel: `products`
+
+| Kolom | Tipe | Deskripsi |
+|-------|------|-----------|
+| `id` | UUID | Primary key |
+| `product_name` | VARCHAR(50) | Nama produk (UNIQUE) |
+| `unit_price` | NUMERIC | Harga satuan opsional |
+| `created_at` | TIMESTAMP | Waktu pembuatan |
+| `updated_at` | TIMESTAMP | Waktu update terakhir |
+
+#### Tabel: `customers`
+
+*Menyimpan relasi data pelanggan dengan struktur serupa (id, name, phone, contact).*
 
 #### Storage Bucket: `sablon-files`
 

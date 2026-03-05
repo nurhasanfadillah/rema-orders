@@ -10,6 +10,7 @@ interface Props {
    isUpdateAvailable?: boolean;
    onUpdate?: () => void;
    onOpenCustomers?: () => void;
+   onOpenProducts?: () => void;
 }
 
 export const PWAStatusModal: React.FC<Props> = ({
@@ -19,7 +20,8 @@ export const PWAStatusModal: React.FC<Props> = ({
    onInstall,
    isUpdateAvailable = false,
    onUpdate,
-   onOpenCustomers
+   onOpenCustomers,
+   onOpenProducts
 }) => {
    const [isOnline, setIsOnline] = useState(navigator.onLine);
    const [isStandalone, setIsStandalone] = useState(false);
@@ -94,17 +96,17 @@ export const PWAStatusModal: React.FC<Props> = ({
       <div
          onClick={onClick}
          className={`flex items-start gap-4 p-4 rounded-2xl border transition-all ${status === 'good'
-               ? 'bg-emerald-900/10 border-emerald-500/20'
-               : status === 'warn'
-                  ? 'bg-amber-900/10 border-amber-500/20'
-                  : status === 'alert'
-                     ? 'bg-red-900/10 border-red-500/20'
-                     : 'bg-zinc-800 border-zinc-700'
+            ? 'bg-emerald-900/10 border-emerald-500/20'
+            : status === 'warn'
+               ? 'bg-amber-900/10 border-amber-500/20'
+               : status === 'alert'
+                  ? 'bg-red-900/10 border-red-500/20'
+                  : 'bg-zinc-800 border-zinc-700'
             } ${isAction ? 'cursor-pointer hover:bg-zinc-700/50 active:scale-[0.98]' : ''}`}
       >
          <div className={`p-2.5 rounded-xl flex-shrink-0 ${status === 'good' ? 'bg-emerald-500/10 text-emerald-400' :
-               status === 'warn' ? 'bg-amber-500/10 text-amber-400' :
-                  status === 'alert' ? 'bg-red-500/10 text-red-400' : 'bg-zinc-700 text-zinc-400'
+            status === 'warn' ? 'bg-amber-500/10 text-amber-400' :
+               status === 'alert' ? 'bg-red-500/10 text-red-400' : 'bg-zinc-700 text-zinc-400'
             }`}>
             {icon}
          </div>
@@ -170,7 +172,7 @@ export const PWAStatusModal: React.FC<Props> = ({
                         onClose();
                         if (onOpenCustomers) onOpenCustomers();
                      }}
-                     className="w-full flex items-center justify-between p-4 bg-zinc-800/80 hover:bg-zinc-700/80 border border-zinc-700 hover:border-zinc-600 rounded-2xl transition-all group"
+                     className="w-full flex items-center justify-between p-4 bg-zinc-800/80 hover:bg-zinc-700/80 border border-zinc-700 hover:border-zinc-600 rounded-2xl transition-all group mb-2"
                   >
                      <div className="flex items-center gap-3">
                         <div className="p-2.5 bg-zinc-900 rounded-xl text-primary group-hover:bg-primary/20 transition-colors">
@@ -179,6 +181,24 @@ export const PWAStatusModal: React.FC<Props> = ({
                         <div className="text-left">
                            <h4 className="text-sm font-bold text-white mb-0.5">Database Pelanggan</h4>
                            <p className="text-xs text-zinc-400">Atur Master Data & Sinkronisasi</p>
+                        </div>
+                     </div>
+                  </button>
+
+                  <button
+                     onClick={() => {
+                        onClose();
+                        if (onOpenProducts) onOpenProducts();
+                     }}
+                     className="w-full flex items-center justify-between p-4 bg-zinc-800/80 hover:bg-zinc-700/80 border border-zinc-700 hover:border-zinc-600 rounded-2xl transition-all group"
+                  >
+                     <div className="flex items-center gap-3">
+                        <div className="p-2.5 bg-zinc-900 rounded-xl text-emerald-500 group-hover:bg-emerald-500/20 transition-colors">
+                           <DatabaseIcon className="w-5 h-5" />
+                        </div>
+                        <div className="text-left">
+                           <h4 className="text-sm font-bold text-white mb-0.5">Database Produk</h4>
+                           <p className="text-xs text-zinc-400">Atur Master Produk & Sinkronisasi</p>
                         </div>
                      </div>
                   </button>

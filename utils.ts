@@ -143,6 +143,7 @@ export const mapRowToOrder = (row: OrderRow): Order => {
     id: row.id,
     orderNo: row.order_no || '????', // Fallback for old data
     customerId: row.customer_id,
+    productId: row.product_id,
     customerName: row.customer_name || 'Unknown Customer',
     productName: row.product_name || 'Unknown Product',
     quantity: row.quantity || 0,

@@ -33,12 +33,30 @@ export interface Customer {
   updatedAt: number;
 }
 
+// New Interface for Products
+export interface ProductRow {
+  id: string;
+  product_name: string;
+  unit_price?: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Product {
+  id: string;
+  name: string;
+  unitPrice?: number;
+  createdAt: number;
+  updatedAt: number;
+}
+
 // Database Row Structure (Snake Case)
 // Updated to strictly expect Arrays (JSONB) for modern structure
 export interface OrderRow {
   id: string;
   order_no?: string; // New field for Order Number
   customer_id?: string; // Link to customers table
+  product_id?: string; // Link to products table
 
   customer_name: string;
   product_name: string;
@@ -62,6 +80,7 @@ export interface Order {
   id: string;
   orderNo: string; // New field for Order Number
   customerId?: string; // Link to customers table
+  productId?: string; // Link to products table
   customerName: string;
   productName: string;
   quantity: number;

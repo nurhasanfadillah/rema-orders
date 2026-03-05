@@ -15,6 +15,7 @@ import { ExportModal } from './components/ExportModal';
 import { PWAStatusModal } from './components/PWAStatusModal';
 import { DesktopTable } from './components/DesktopTable';
 import { CustomerManagementModal } from './components/CustomerManagementModal';
+import { ProductManagementModal } from './components/ProductManagementModal';
 
 import { getOfflineQueue, dequeueOfflineAction } from './utils/offlineQueue';
 import { uploadFiles } from './utils/uploadHelper';
@@ -45,6 +46,7 @@ export default function App() {
   const [showExportModal, setShowExportModal] = useState(false);
   const [showPwaModal, setShowPwaModal] = useState(false);
   const [showCustomerModal, setShowCustomerModal] = useState(false);
+  const [showProductModal, setShowProductModal] = useState(false);
 
   // --- PWA State ---
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
@@ -264,6 +266,7 @@ export default function App() {
           const { error } = await supabase.from('orders').insert([{
             order_no: generateOrderNo(),
             customer_id: payload.customerId,
+            product_id: payload.productId,
             customer_name: payload.customerName,
             product_name: payload.productName,
             quantity: payload.quantity,
@@ -281,6 +284,7 @@ export default function App() {
         } else if (type === 'UPDATE' && orderId) {
           const { error } = await supabase.from('orders').update({
             customer_id: payload.customerId,
+            product_id: payload.productId,
             customer_name: payload.customerName,
             product_name: payload.productName,
             quantity: payload.quantity,
@@ -385,6 +389,7 @@ export default function App() {
       const { error } = await supabase.from('orders').insert([{
         order_no: generateOrderNo(),
         customer_id: orderData.customerId,
+        product_id: orderData.productId,
         customer_name: orderData.customerName,
         product_name: orderData.productName,
         quantity: orderData.quantity,
@@ -418,6 +423,7 @@ export default function App() {
         .from('orders')
         .update({
           customer_id: orderData.customerId,
+          product_id: orderData.productId,
           customer_name: orderData.customerName,
           product_name: orderData.productName,
           quantity: orderData.quantity,
@@ -612,10 +618,16 @@ export default function App() {
         isUpdateAvailable={isUpdateAvailable}
         onUpdate={handleUpdateApp}
         onOpenCustomers={() => setShowCustomerModal(true)}
+        onOpenProducts={() => setShowProductModal(true)}
       />
       <CustomerManagementModal
         isOpen={showCustomerModal}
         onClose={() => setShowCustomerModal(false)}
+        onToast={showToast}
+      />
+      <ProductManagementModal
+        isOpen={showProductModal}
+        onClose={() => setShowProductModal(false)}
         onToast={showToast}
       />
     </>

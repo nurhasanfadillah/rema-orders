@@ -78,6 +78,7 @@ export const OrderForm: React.FC<Props> = ({ onBack, onSubmit, initialData, mode
 
   const [formData, setFormData] = useState({
     customerId: initialData?.customerId || '',
+    productId: initialData?.productId || '',
     customerName: initialData?.customerName || '',
     productName: initialData?.productName || '',
     quantity: initialData?.quantity || 1,
@@ -122,6 +123,45 @@ export const OrderForm: React.FC<Props> = ({ onBack, onSubmit, initialData, mode
       onError("Gagal menambahkan pelanggan baru.");
     } finally {
       setIsLoadingCustomers(false);
+    }
+  };
+
+  // Products Autocomplete Setup
+  const [products, setProducts] = useState<{ id: string, name: string }[]>([]);
+  const [isLoadingProducts, setIsLoadingProducts] = useState(true);
+
+  React.useEffect(() => {
+    const fetchProducts = async () => {
+      setIsLoadingProducts(true);
+      const { data } = await supabase.from('products').select('id, product_name');
+      if (data) {
+        setProducts(data.map(p => ({ id: p.id, name: p.product_name })));
+      }
+      setIsLoadingProducts(false);
+    };
+    fetchProducts();
+  }, []);
+
+  const handleAddProduct = async (newProductName: string) => {
+    setIsLoadingProducts(true);
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .insert([{ product_name: newProductName }])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        setProducts(prev => [...prev, { id: data.id, name: data.product_name }]);
+        setFormData(prev => ({ ...prev, productId: data.id, productName: data.product_name }));
+      }
+    } catch (err) {
+      console.error("Failed to add product", err);
+      onError("Gagal menambahkan produk baru.");
+    } finally {
+      setIsLoadingProducts(false);
     }
   };
 
@@ -291,7 +331,8 @@ export const OrderForm: React.FC<Props> = ({ onBack, onSubmit, initialData, mode
             designFiles,
             receiptFile,
             channel,
-            customerId: formData.customerId || undefined
+            customerId: formData.customerId || undefined,
+            productId: formData.productId || undefined
           },
           orderId: initialData?.id,
           timestamp: Date.now()
@@ -347,7 +388,8 @@ export const OrderForm: React.FC<Props> = ({ onBack, onSubmit, initialData, mode
         designFiles: uploadedDesigns,
         receiptFile: uploadedReceipt,
         channel: channel,
-        customerId: formData.customerId || undefined
+        customerId: formData.customerId || undefined,
+        productId: formData.productId || undefined
       });
 
     } catch (err: any) {
@@ -467,16 +509,24 @@ export const OrderForm: React.FC<Props> = ({ onBack, onSubmit, initialData, mode
               </div>
             </InputGroup>
 
-            {/* Product Name */}
+            {/* Product Name with Autocomplete */}
             <InputGroup label="Nama Produk / Artikel" required error={errors.productName} disabled={isLocked}>
-              <input
-                type="text"
-                value={formData.productName}
-                onChange={(e) => setFormData({ ...formData, productName: e.target.value })}
-                placeholder="Contoh: Kaos Cotton Combed 30s"
-                className="w-full bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 text-zinc-100 placeholder:text-zinc-600 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
-                maxLength={MAX_TEXT_LENGTH}
-              />
+              <div className="relative z-20">
+                <SearchableSelect
+                  options={products.map(p => ({ value: p.id, label: p.name }))}
+                  value={formData.productId}
+                  onChange={(val, label) => {
+                    setFormData({ ...formData, productId: val, productName: label || '' });
+                  }}
+                  placeholder={formData.productName || "Contoh: Kaos Cotton Combed 30s"}
+                  searchable={true}
+                  loading={isLoadingProducts}
+                  allowAdd={true}
+                  onAdd={handleAddProduct}
+                  addLabel="+ Tambah produk baru:"
+                  disabled={isLocked}
+                />
+              </div>
             </InputGroup>
 
             {/* Quantity */}
