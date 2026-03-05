@@ -66,7 +66,14 @@
 | **Database Pelanggan** | Manajemen data pelanggan (CRUD), dropdown searchable di form, dan auto-link sinkronisasi data lama. |
 | **Database Produk** | Manajemen data produk/item sablon (CRUD), dropdown searchable, dan auto-link untuk migrasi produk lawas. |
 
-### 3. Jenis Pesanan
+### 3. Ranking Dashboard (Leaderboard)
+
+Sistem ranking otomatis berdasarkan performa 30 hari terakhir. Dapat diakses melalui menu **System Info** -> **Ranking Dashboard**.
+Terdapat 2 kategori utama untuk performa pelanggan:
+- **Pesanan Terbanyak (Top Orders)**: Berdasarkan jumlah frekuensi pesanan (orders) yang dibuat oleh pelanggan.
+- **Qty Terbanyak (Top Quantity)**: Berdasarkan total akumulasi _quantity_ produk yang dipesan oleh pelanggan.
+
+### 4. Jenis Pesanan
 
 - **Custom Order**: Pesanan dengan desain kustom, mendukung upload file mentah dan preview
 - **Plain Order**: Pesanan polos tanpa desain khusus
@@ -296,6 +303,13 @@ rema-orders/
 2. Tap tombol **Share** (kotak dengan panah ke atas)
 3. Pilih **"Add to Home Screen"**
 4. Tap **"Add"**
+
+### 9. Melihat Ranking Performa
+
+1. Klik tombol **System Info** di sidebar (desktop) atau icon info bergambar _i_ di header (mobile).
+2. Lihat pada section menu, klik **Ranking Dashboard**.
+3. Sistem akan memuat data 30 hari terakhir.
+4. Anda dapat melihat 10 Pelanggan dengan pesanan terbanyak dan 10 Produk dengan kuantitas pesanan tertinggi. Peringkat 1, 2, dan 3 divisualisasikan menggunakan ikon piala (emas, perak, perunggu).
 
 ---
 
@@ -616,7 +630,8 @@ Berdasarkan audit teknis terhadap reliabilitas pengiriman data dan arsitektur *o
 - ✅ PWA dengan offline support
 - ✅ Responsive design (mobile & desktop)
 - ✅ Sistem verifikasi keamanan
-- [x] Copy/duplicate order
+- ✅ Copy/duplicate order
+- ✅ **Sistem Ranking/Leaderboard** sepenuhnya berbasis Pelanggan (10 Pesanan Terbanyak & 10 Qty Terbanyak dalam 30 Hari Terakhir)
 - 📋 **[Audit Teknis]** Telah dilakukan dokumentasi terkait celah reliabilitas arsitektur submission, storage, dan service worker cache.
 - ✅ **[Optimasi Performa & UI]** Memperbaiki isu *double reload* dan UI *flashing* saat mengedit data pada Manajemen Produk & Pelanggan, serta menghilangkan *fetch* duplikat yang dipicu oleh React StrictMode dan rekayasa dependensi *offline queue*.
 

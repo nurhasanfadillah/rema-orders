@@ -16,6 +16,7 @@ import { PWAStatusModal } from './components/PWAStatusModal';
 import { DesktopTable } from './components/DesktopTable';
 import { CustomerPage } from './components/CustomerPage';
 import { ProductPage } from './components/ProductPage';
+import { RankingPage } from './components/RankingPage';
 
 import { getOfflineQueue, dequeueOfflineAction } from './utils/offlineQueue';
 import { uploadFiles } from './utils/uploadHelper';
@@ -622,6 +623,7 @@ export default function App() {
         onUpdate={handleUpdateApp}
         onOpenCustomers={() => { setShowPwaModal(false); setView('CUSTOMERS'); }}
         onOpenProducts={() => { setShowPwaModal(false); setView('PRODUCTS'); }}
+        onOpenRanking={() => { setShowPwaModal(false); setView('RANKING'); }}
       />
     </>
   );
@@ -746,7 +748,7 @@ export default function App() {
         {/* --- DESKTOP HEADER (Visible on md+) --- */}
         <header className="hidden md:flex items-center justify-between px-6 py-4 border-b border-zinc-800 bg-zinc-900/80 backdrop-blur-md">
           <h2 className="text-xl font-bold text-white">
-            {view === 'LIST' ? 'Dashboard Pesanan' : view === 'FORM' ? (mode === 'create' ? (activeOrder?.customerName ? 'Salin Pesanan' : 'Buat Pesanan Baru') : 'Edit Pesanan') : view === 'DETAIL' ? 'Detail Pesanan' : view === 'CUSTOMERS' ? 'Database Pelanggan' : 'Database Produk'}
+            {view === 'LIST' ? 'Dashboard Pesanan' : view === 'FORM' ? (mode === 'create' ? (activeOrder?.customerName ? 'Salin Pesanan' : 'Buat Pesanan Baru') : 'Edit Pesanan') : view === 'DETAIL' ? 'Detail Pesanan' : view === 'CUSTOMERS' ? 'Database Pelanggan' : view === 'RANKING' ? 'Ranking Performa (30 Hari Terakhir)' : 'Database Produk'}
           </h2>
 
           {view === 'LIST' && (
@@ -899,6 +901,10 @@ export default function App() {
 
           {view === 'PRODUCTS' && (
             <ProductPage onToast={showToast} />
+          )}
+
+          {view === 'RANKING' && (
+            <RankingPage onBack={() => setView('LIST')} />
           )}
 
           {view === 'LIST' && (

@@ -11,6 +11,7 @@ interface Props {
    onUpdate?: () => void;
    onOpenCustomers?: () => void;
    onOpenProducts?: () => void;
+   onOpenRanking?: () => void;
 }
 
 export const PWAStatusModal: React.FC<Props> = ({
@@ -21,7 +22,8 @@ export const PWAStatusModal: React.FC<Props> = ({
    isUpdateAvailable = false,
    onUpdate,
    onOpenCustomers,
-   onOpenProducts
+   onOpenProducts,
+   onOpenRanking
 }) => {
    const [isOnline, setIsOnline] = useState(navigator.onLine);
    const [isStandalone, setIsStandalone] = useState(false);
@@ -190,7 +192,7 @@ export const PWAStatusModal: React.FC<Props> = ({
                         onClose();
                         if (onOpenProducts) onOpenProducts();
                      }}
-                     className="w-full flex items-center justify-between p-4 bg-zinc-800/80 hover:bg-zinc-700/80 border border-zinc-700 hover:border-zinc-600 rounded-2xl transition-all group"
+                     className="w-full flex items-center justify-between p-4 bg-zinc-800/80 hover:bg-zinc-700/80 border border-zinc-700 hover:border-zinc-600 rounded-2xl transition-all group mb-2"
                   >
                      <div className="flex items-center gap-3">
                         <div className="p-2.5 bg-zinc-900 rounded-xl text-emerald-500 group-hover:bg-emerald-500/20 transition-colors">
@@ -199,6 +201,24 @@ export const PWAStatusModal: React.FC<Props> = ({
                         <div className="text-left">
                            <h4 className="text-sm font-bold text-white mb-0.5">Database Produk</h4>
                            <p className="text-xs text-zinc-400">Atur Master Produk & Sinkronisasi</p>
+                        </div>
+                     </div>
+                  </button>
+
+                  <button
+                     onClick={() => {
+                        onClose();
+                        if (onOpenRanking) onOpenRanking();
+                     }}
+                     className="w-full flex items-center justify-between p-4 bg-zinc-800/80 hover:bg-zinc-700/80 border border-zinc-700 hover:border-zinc-600 rounded-2xl transition-all group"
+                  >
+                     <div className="flex items-center gap-3">
+                        <div className="p-2.5 bg-zinc-900 rounded-xl text-yellow-500 group-hover:bg-yellow-500/20 transition-colors">
+                           <DatabaseIcon className="w-5 h-5" />
+                        </div>
+                        <div className="text-left">
+                           <h4 className="text-sm font-bold text-white mb-0.5">Ranking Dashboard</h4>
+                           <p className="text-xs text-zinc-400">Top 10 Pelanggan & Produk (30 Hari)</p>
                         </div>
                      </div>
                   </button>
