@@ -25,8 +25,8 @@ export const CustomerManagementModal: React.FC<Props> = ({ isOpen, onClose, onTo
         }
     }, [isOpen]);
 
-    const fetchCustomers = async () => {
-        setLoading(true);
+    const fetchCustomers = async (silent = false) => {
+        if (!silent) setLoading(true);
         try {
             const { data, error } = await supabase
                 .from('customers')
@@ -73,7 +73,7 @@ export const CustomerManagementModal: React.FC<Props> = ({ isOpen, onClose, onTo
             onToast('Pelanggan berhasil ditambahkan', 'success');
             setShowAddForm(false);
             setFormData({ name: '', phone: '', contact: '' });
-            fetchCustomers();
+            fetchCustomers(true);
         } catch (err: any) {
             onToast(err.message, 'error');
         } finally {
@@ -89,7 +89,7 @@ export const CustomerManagementModal: React.FC<Props> = ({ isOpen, onClose, onTo
             if (error) throw error;
 
             onToast('Pelanggan berhasil dihapus', 'success');
-            fetchCustomers();
+            fetchCustomers(true);
         } catch (err: any) {
             onToast('Gagal menghapus: ' + err.message, 'error');
         }

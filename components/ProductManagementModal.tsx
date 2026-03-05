@@ -29,8 +29,8 @@ export const ProductManagementModal: React.FC<Props> = ({ isOpen, onClose, onToa
         }
     }, [isOpen]);
 
-    const fetchProducts = async () => {
-        setLoading(true);
+    const fetchProducts = async (silent = false) => {
+        if (!silent) setLoading(true);
         try {
             const { data, error } = await supabase
                 .from('products')
@@ -77,7 +77,7 @@ export const ProductManagementModal: React.FC<Props> = ({ isOpen, onClose, onToa
             onToast('Produk berhasil ditambahkan', 'success');
             setShowAddForm(false);
             setFormData({ name: '', unitPrice: '' });
-            fetchProducts();
+            fetchProducts(true);
         } catch (err: any) {
             onToast(err.message, 'error');
         } finally {
@@ -108,7 +108,7 @@ export const ProductManagementModal: React.FC<Props> = ({ isOpen, onClose, onToa
             onToast('Produk berhasil diperbarui', 'success');
             setEditingId(null);
             setEditFormData({ name: '', unitPrice: '' });
-            fetchProducts();
+            fetchProducts(true);
         } catch (err: any) {
             onToast(err.message, 'error');
         } finally {
@@ -124,7 +124,7 @@ export const ProductManagementModal: React.FC<Props> = ({ isOpen, onClose, onToa
             if (error) throw error;
 
             onToast('Produk berhasil dihapus', 'success');
-            fetchProducts();
+            fetchProducts(true);
         } catch (err: any) {
             onToast('Gagal menghapus: ' + err.message, 'error');
         }
@@ -139,7 +139,7 @@ export const ProductManagementModal: React.FC<Props> = ({ isOpen, onClose, onToa
             if (error) throw error;
 
             onToast(`Auto-link berhasil! ${data.inserted_products} produk baru ditambahkan dan ${data.linked_orders} pesanan lama telah terhubung.`, 'success');
-            fetchProducts(); // Refresh the list
+            fetchProducts(true); // Refresh the list silently
         } catch (err: any) {
             onToast('Gagal melakukan auto-link: ' + err.message, 'error');
         } finally {

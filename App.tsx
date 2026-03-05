@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Order, OrderStatus, ViewState, OrderRow } from './types';
 import { OrderForm } from './components/OrderForm';
 import { OrderDetail } from './components/OrderDetail';
@@ -322,13 +322,26 @@ export default function App() {
     }
   }, [syncingOffline]);
 
+  const appInitialized = useRef(false);
+
   useEffect(() => {
-    // Check URL params for quick actions
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('action') === 'new_order') {
-      setView('FORM');
-      setMode('create');
-      window.history.replaceState({}, '', '/');
+    if (!appInitialized.current) {
+      appInitialized.current = true;
+      // Check URL params for quick actions
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('action') === 'new_order') {
+        setView('FORM');
+        setMode('create');
+        window.history.replaceState({}, '', '/');
+      }
+
+      // Initial Fetch
+      fetchOrders();
+      fetchStatusCounts();
+
+      if (navigator.onLine) {
+        processOfflineQueue();
+      }
     }
 
     // PWA Install Prompt
@@ -349,14 +362,6 @@ export default function App() {
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     window.addEventListener('swUpdated', handleSWUpdate as EventListener);
     window.addEventListener('online', processOfflineQueue);
-
-    // Initial Fetch
-    fetchOrders();
-    fetchStatusCounts();
-
-    if (navigator.onLine) {
-      processOfflineQueue();
-    }
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);

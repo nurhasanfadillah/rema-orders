@@ -92,8 +92,11 @@ export const OrderForm: React.FC<Props> = ({ onBack, onSubmit, initialData, mode
   // Customers Autocomplete Setup
   const [customers, setCustomers] = useState<{ id: string, name: string }[]>([]);
   const [isLoadingCustomers, setIsLoadingCustomers] = useState(true);
+  const customersFetched = React.useRef(false);
 
   React.useEffect(() => {
+    if (customersFetched.current) return;
+    customersFetched.current = true;
     const fetchCustomers = async () => {
       setIsLoadingCustomers(true);
       const { data } = await supabase.from('customers').select('id, name');
@@ -129,8 +132,11 @@ export const OrderForm: React.FC<Props> = ({ onBack, onSubmit, initialData, mode
   // Products Autocomplete Setup
   const [products, setProducts] = useState<{ id: string, name: string }[]>([]);
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
+  const productsFetched = React.useRef(false);
 
   React.useEffect(() => {
+    if (productsFetched.current) return;
+    productsFetched.current = true;
     const fetchProducts = async () => {
       setIsLoadingProducts(true);
       const { data } = await supabase.from('products').select('id, product_name');

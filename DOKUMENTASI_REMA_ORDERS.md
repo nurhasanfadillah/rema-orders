@@ -616,8 +616,9 @@ Berdasarkan audit teknis terhadap reliabilitas pengiriman data dan arsitektur *o
 - ✅ PWA dengan offline support
 - ✅ Responsive design (mobile & desktop)
 - ✅ Sistem verifikasi keamanan
-- ✅ Copy/duplicate order
+- [x] Copy/duplicate order
 - 📋 **[Audit Teknis]** Telah dilakukan dokumentasi terkait celah reliabilitas arsitektur submission, storage, dan service worker cache.
+- ✅ **[Optimasi Performa & UI]** Memperbaiki isu *double reload* dan UI *flashing* saat mengedit data pada Manajemen Produk & Pelanggan, serta menghilangkan *fetch* duplikat yang dipicu oleh React StrictMode dan rekayasa dependensi *offline queue*.
 
 ---
 
