@@ -7,13 +7,13 @@ export const formatCurrency = (val: number) => {
 export const formatDate = (dateString: string | number, withTime: boolean = true) => {
   if (!dateString) return '-';
   const date = typeof dateString === 'number' ? new Date(dateString) : new Date(dateString);
-  
+
   if (isNaN(date.getTime())) return '-';
 
   const day = date.getDate().toString().padStart(2, '0');
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
   const year = date.getFullYear();
-  
+
   const formattedDate = `${day}/${month}/${year}`;
 
   if (withTime) {
@@ -55,13 +55,13 @@ export interface OrderAgeInfo {
 export const getOrderAgeInfo = (createdAt: number | string, status: OrderStatus): OrderAgeInfo => {
   const created = new Date(createdAt);
   const now = new Date();
-  
+
   // Set to midnight to compare dates only, roughly
   const createdMidnight = new Date(created.getFullYear(), created.getMonth(), created.getDate());
   const nowMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  
+
   const diffTime = Math.abs(nowMidnight.getTime() - createdMidnight.getTime());
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
   let label = '';
   if (diffDays === 0) label = 'Hari ini';
@@ -112,20 +112,20 @@ export const getOrderAgeInfo = (createdAt: number | string, status: OrderStatus)
 const normalizeFileArray = (data: FileData[] | FileData | null | any): FileData[] => {
   if (!data) return [];
   if (Array.isArray(data)) return data;
-  
+
   // Handle case where data might be a single string (legacy data issue)
   if (typeof data === 'string') {
-      return [{
-          name: 'File',
-          type: 'unknown',
-          size: 0,
-          url: data
-      }];
+    return [{
+      name: 'File',
+      type: 'unknown',
+      size: 0,
+      url: data
+    }];
   }
-  
+
   // Handle single object
   if (typeof data === 'object') return [data];
-  
+
   return [];
 };
 
@@ -142,6 +142,7 @@ export const mapRowToOrder = (row: OrderRow): Order => {
   return {
     id: row.id,
     orderNo: row.order_no || '????', // Fallback for old data
+    customerId: row.customer_id,
     customerName: row.customer_name || 'Unknown Customer',
     productName: row.product_name || 'Unknown Product',
     quantity: row.quantity || 0,
@@ -178,13 +179,13 @@ export const getStoragePathFromUrl = (url: string): string | null => {
 // Extracts ALL file paths associated with an order
 export const getAllOrderFilePaths = (order: Order): string[] => {
   const paths: string[] = [];
-  
+
   // Collect paths from arrays
   order.previewImages?.forEach(img => {
     const path = getStoragePathFromUrl(img.url);
     if (path) paths.push(path);
   });
-  
+
   order.designFiles?.forEach(file => {
     const path = getStoragePathFromUrl(file.url);
     if (path) paths.push(path);

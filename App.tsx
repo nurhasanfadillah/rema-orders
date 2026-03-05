@@ -14,6 +14,7 @@ import { ConfirmationModal } from './components/Modal';
 import { ExportModal } from './components/ExportModal';
 import { PWAStatusModal } from './components/PWAStatusModal';
 import { DesktopTable } from './components/DesktopTable';
+import { CustomerManagementModal } from './components/CustomerManagementModal';
 
 import { getOfflineQueue, dequeueOfflineAction } from './utils/offlineQueue';
 import { uploadFiles } from './utils/uploadHelper';
@@ -41,9 +42,9 @@ export default function App() {
   const [mode, setMode] = useState<'create' | 'edit'>('create');
   const [loading, setLoading] = useState(false);
 
-  // Modals
   const [showExportModal, setShowExportModal] = useState(false);
   const [showPwaModal, setShowPwaModal] = useState(false);
+  const [showCustomerModal, setShowCustomerModal] = useState(false);
 
   // --- PWA State ---
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
@@ -262,6 +263,7 @@ export default function App() {
         if (type === 'CREATE') {
           const { error } = await supabase.from('orders').insert([{
             order_no: generateOrderNo(),
+            customer_id: payload.customerId,
             customer_name: payload.customerName,
             product_name: payload.productName,
             quantity: payload.quantity,
@@ -278,6 +280,7 @@ export default function App() {
           if (error) throw error;
         } else if (type === 'UPDATE' && orderId) {
           const { error } = await supabase.from('orders').update({
+            customer_id: payload.customerId,
             customer_name: payload.customerName,
             product_name: payload.productName,
             quantity: payload.quantity,
@@ -381,6 +384,7 @@ export default function App() {
     try {
       const { error } = await supabase.from('orders').insert([{
         order_no: generateOrderNo(),
+        customer_id: orderData.customerId,
         customer_name: orderData.customerName,
         product_name: orderData.productName,
         quantity: orderData.quantity,
@@ -413,6 +417,7 @@ export default function App() {
       const { error } = await supabase
         .from('orders')
         .update({
+          customer_id: orderData.customerId,
           customer_name: orderData.customerName,
           product_name: orderData.productName,
           quantity: orderData.quantity,
@@ -606,6 +611,12 @@ export default function App() {
         onInstall={handleInstallPWA}
         isUpdateAvailable={isUpdateAvailable}
         onUpdate={handleUpdateApp}
+        onOpenCustomers={() => setShowCustomerModal(true)}
+      />
+      <CustomerManagementModal
+        isOpen={showCustomerModal}
+        onClose={() => setShowCustomerModal(false)}
+        onToast={showToast}
       />
     </>
   );
@@ -666,8 +677,8 @@ export default function App() {
                 <div className="flex items-center gap-3">
                   {/* Status Indicator Dot */}
                   <div className={`w-2 h-2 rounded-full ${status === OrderStatus.PROCESSING ? 'bg-blue-500' :
-                      status === OrderStatus.PRINTING ? 'bg-amber-500' :
-                        status === OrderStatus.PACKING ? 'bg-purple-500' : 'bg-emerald-500'
+                    status === OrderStatus.PRINTING ? 'bg-amber-500' :
+                      status === OrderStatus.PACKING ? 'bg-purple-500' : 'bg-emerald-500'
                     }`}></div>
                   <span className="flex-1 text-left">{status}</span>
                 </div>

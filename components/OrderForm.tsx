@@ -44,7 +44,7 @@ const SingleFileUploader = ({ label, sublabel, file, onSelect, icon, accept, err
       {error && <span className="text-[10px] text-red-400 font-medium">{error}</span>}
     </div>
     <label className={`flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer ${error ? 'bg-red-500/5 border-red-500/50' :
-        file ? 'bg-primary/10 border-primary/30' : 'bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800'
+      file ? 'bg-primary/10 border-primary/30' : 'bg-zinc-800/50 border-zinc-700 hover:bg-zinc-800'
       }`}>
       <div className="flex items-center gap-3 overflow-hidden">
         <div className={`p-2 rounded-lg ${file ? 'bg-primary text-white' : 'bg-zinc-700 text-zinc-400'}`}>
@@ -77,6 +77,7 @@ export const OrderForm: React.FC<Props> = ({ onBack, onSubmit, initialData, mode
   const isCopyMode = mode === 'create' && !!initialData?.customerName;
 
   const [formData, setFormData] = useState({
+    customerId: initialData?.customerId || '',
     customerName: initialData?.customerName || '',
     productName: initialData?.productName || '',
     quantity: initialData?.quantity || 1,
@@ -86,6 +87,43 @@ export const OrderForm: React.FC<Props> = ({ onBack, onSubmit, initialData, mode
     recipientPhone: initialData?.recipientPhone || '',
     address: initialData?.address || '',
   });
+
+  // Customers Autocomplete Setup
+  const [customers, setCustomers] = useState<{ id: string, name: string }[]>([]);
+  const [isLoadingCustomers, setIsLoadingCustomers] = useState(true);
+
+  React.useEffect(() => {
+    const fetchCustomers = async () => {
+      setIsLoadingCustomers(true);
+      const { data } = await supabase.from('customers').select('id, name');
+      if (data) setCustomers(data);
+      setIsLoadingCustomers(false);
+    };
+    fetchCustomers();
+  }, []);
+
+  const handleAddCustomer = async (newCustomerName: string) => {
+    setIsLoadingCustomers(true);
+    try {
+      const { data, error } = await supabase
+        .from('customers')
+        .insert([{ name: newCustomerName }])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        setCustomers(prev => [...prev, { id: data.id, name: data.name }]);
+        setFormData(prev => ({ ...prev, customerId: data.id, customerName: data.name }));
+      }
+    } catch (err) {
+      console.error("Failed to add customer", err);
+      onError("Gagal menambahkan pelanggan baru.");
+    } finally {
+      setIsLoadingCustomers(false);
+    }
+  };
 
   const [orderType, setOrderType] = useState<'CUSTOM' | 'PLAIN'>(
     initialData?.description === 'PESANAN POLOS' ? 'PLAIN' : 'CUSTOM'
@@ -252,7 +290,8 @@ export const OrderForm: React.FC<Props> = ({ onBack, onSubmit, initialData, mode
             previewImages,
             designFiles,
             receiptFile,
-            channel
+            channel,
+            customerId: formData.customerId || undefined
           },
           orderId: initialData?.id,
           timestamp: Date.now()
@@ -307,7 +346,8 @@ export const OrderForm: React.FC<Props> = ({ onBack, onSubmit, initialData, mode
         previewImages: uploadedPreviews,
         designFiles: uploadedDesigns,
         receiptFile: uploadedReceipt,
-        channel: channel
+        channel: channel,
+        customerId: formData.customerId || undefined
       });
 
     } catch (err: any) {
@@ -407,16 +447,24 @@ export const OrderForm: React.FC<Props> = ({ onBack, onSubmit, initialData, mode
 
           {/* Desktop Grid Layout for Inputs */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-            {/* Customer Name */}
+            {/* Customer Name with Autocomplete */}
             <InputGroup label="Nama Pelanggan" required error={errors.customerName} disabled={isLocked}>
-              <input
-                type="text"
-                value={formData.customerName}
-                onChange={(e) => setFormData({ ...formData, customerName: e.target.value })}
-                placeholder="Contoh: Budi Santoso"
-                className="w-full bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 text-zinc-100 placeholder:text-zinc-600 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
-                maxLength={MAX_TEXT_LENGTH}
-              />
+              <div className="relative z-30">
+                <SearchableSelect
+                  options={customers.map(c => ({ value: c.id, label: c.name }))}
+                  value={formData.customerId}
+                  onChange={(val, label) => {
+                    setFormData({ ...formData, customerId: val, customerName: label || '' });
+                  }}
+                  placeholder={formData.customerName || "Pilih / Cari Pelanggan..."}
+                  searchable={true}
+                  loading={isLoadingCustomers}
+                  allowAdd={true}
+                  onAdd={handleAddCustomer}
+                  addLabel="+ Tambah customer baru:"
+                  disabled={isLocked}
+                />
+              </div>
             </InputGroup>
 
             {/* Product Name */}
@@ -598,8 +646,8 @@ export const OrderForm: React.FC<Props> = ({ onBack, onSubmit, initialData, mode
           onClick={handleSubmit}
           disabled={loading || isLocked}
           className={`w-full relative overflow-hidden py-4 rounded-2xl transition-all disabled:cursor-not-allowed flex flex-col items-center justify-center group shadow-xl ${loading
-              ? 'bg-zinc-800 text-zinc-300'
-              : 'bg-gradient-to-r from-primary to-primary-dark text-white shadow-primary/20 hover:shadow-primary/40 active:scale-[0.98]'
+            ? 'bg-zinc-800 text-zinc-300'
+            : 'bg-gradient-to-r from-primary to-primary-dark text-white shadow-primary/20 hover:shadow-primary/40 active:scale-[0.98]'
             }`}
         >
           {loading && (

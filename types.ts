@@ -14,18 +14,39 @@ export interface FileData {
   file?: File; // Helper for upload process (not stored in DB JSON)
 }
 
+// New Interface for Customers
+export interface CustomerRow {
+  id: string;
+  name: string;
+  phone?: string;
+  contact?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Customer {
+  id: string;
+  name: string;
+  phone?: string;
+  contact?: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
 // Database Row Structure (Snake Case)
 // Updated to strictly expect Arrays (JSONB) for modern structure
 export interface OrderRow {
   id: string;
   order_no?: string; // New field for Order Number
+  customer_id?: string; // Link to customers table
+
   customer_name: string;
   product_name: string;
   quantity: number;
   description: string;
-  preview_image: FileData[] | null; 
-  design_file: FileData[] | null;   
-  receipt_file: FileData | null; 
+  preview_image: FileData[] | null;
+  design_file: FileData[] | null;
+  receipt_file: FileData | null;
   status: string;
   created_at: string;
   updated_at: string;
@@ -40,12 +61,13 @@ export interface OrderRow {
 export interface Order {
   id: string;
   orderNo: string; // New field for Order Number
+  customerId?: string; // Link to customers table
   customerName: string;
   productName: string;
   quantity: number;
   description: string;
-  previewImages: FileData[]; 
-  designFiles: FileData[];   
+  previewImages: FileData[];
+  designFiles: FileData[];
   receiptFile: FileData | null;
   status: OrderStatus;
   createdAt: number;
