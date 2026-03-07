@@ -73,6 +73,7 @@ export interface OrderRow {
   recipient_name?: string;
   recipient_phone?: string;
   address?: string;
+  dtf_printed?: boolean;
 }
 
 // Application State Structure (Camel Case)
@@ -96,6 +97,7 @@ export interface Order {
   recipientName?: string;
   recipientPhone?: string;
   address?: string;
+  dtfPrinted: boolean;
 }
 
 export type ViewState = 'LIST' | 'FORM' | 'DETAIL' | 'CUSTOMERS' | 'PRODUCTS' | 'RANKING';

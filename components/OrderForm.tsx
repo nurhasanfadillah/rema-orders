@@ -87,6 +87,7 @@ export const OrderForm: React.FC<Props> = ({ onBack, onSubmit, initialData, mode
     recipientName: initialData?.recipientName || '',
     recipientPhone: initialData?.recipientPhone || '',
     address: initialData?.address || '',
+    dtfPrinted: initialData?.dtfPrinted || false,
   });
 
   // Customers Autocomplete Setup
@@ -475,6 +476,24 @@ export const OrderForm: React.FC<Props> = ({ onBack, onSubmit, initialData, mode
           >
             PESANAN POLOS
           </button>
+        </div>
+
+        {/* DTF Print Status Toggle */}
+        <div className="flex bg-zinc-800/50 p-4 rounded-xl mb-6 border border-zinc-700 items-center justify-between">
+          <div>
+            <h3 className="text-sm font-bold text-zinc-200">Sudah Cetak DTF</h3>
+            <p className="text-[10px] text-zinc-500 mt-0.5">Tandai jika pesanan sudah melalui proses cetak DTF</p>
+          </div>
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              className="sr-only peer"
+              checked={formData.dtfPrinted}
+              onChange={(e) => setFormData({ ...formData, dtfPrinted: e.target.checked })}
+              disabled={isLocked}
+            />
+            <div className="w-11 h-6 bg-zinc-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary opacity-80 peer-disabled:opacity-50"></div>
+          </label>
         </div>
 
         <div className="space-y-5">

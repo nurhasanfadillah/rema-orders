@@ -2,7 +2,7 @@ import React from 'react';
 import { Order, OrderStatus } from '../types';
 import { formatDate, getOrderAgeInfo } from '../utils';
 import { StatusBadge } from './StatusBadge';
-import { ImageIcon, GlobeIcon, ZapIcon } from './icons';
+import { ImageIcon, GlobeIcon, ZapIcon, CheckCircleIcon } from './icons';
 
 interface Props {
   orders: Order[];
@@ -33,78 +33,84 @@ export const DesktopTable: React.FC<Props> = ({ orders, onRowClick, isLoading })
 
           <tbody className="divide-y divide-zinc-800">
             {isLoading ? (
-               <tr>
-                 <td colSpan={8} className="p-12 text-center text-zinc-500 animate-pulse">
-                   Memuat Data...
-                 </td>
-               </tr>
+              <tr>
+                <td colSpan={8} className="p-12 text-center text-zinc-500 animate-pulse">
+                  Memuat Data...
+                </td>
+              </tr>
             ) : orders.length === 0 ? (
-               <tr>
-                 <td colSpan={8} className="p-12 text-center text-zinc-500">
-                   Tidak ada data ditemukan.
-                 </td>
-               </tr>
+              <tr>
+                <td colSpan={8} className="p-12 text-center text-zinc-500">
+                  Tidak ada data ditemukan.
+                </td>
+              </tr>
             ) : (
               orders.map((order) => {
                 const ageInfo = getOrderAgeInfo(order.createdAt, order.status);
-                
+
                 return (
-                <tr 
-                  key={order.id} 
-                  onClick={() => onRowClick(order)}
-                  className="hover:bg-zinc-800/60 cursor-pointer transition-colors group"
-                >
-                  <td className="p-3 text-center">
-                    {order.previewImages && order.previewImages.length > 0 ? (
-                      <img 
-                        src={order.previewImages[0].url} 
-                        className="w-10 h-10 rounded-lg object-cover mx-auto border border-zinc-700 group-hover:border-zinc-500" 
-                        alt="Img" 
-                      />
-                    ) : (
-                      <div className="w-10 h-10 rounded-lg bg-zinc-800 border border-zinc-700 mx-auto flex items-center justify-center text-zinc-600">
-                        <ImageIcon className="w-5 h-5" />
+                  <tr
+                    key={order.id}
+                    onClick={() => onRowClick(order)}
+                    className="hover:bg-zinc-800/60 cursor-pointer transition-colors group"
+                  >
+                    <td className="p-3 text-center">
+                      {order.previewImages && order.previewImages.length > 0 ? (
+                        <img
+                          src={order.previewImages[0].url}
+                          className="w-10 h-10 rounded-lg object-cover mx-auto border border-zinc-700 group-hover:border-zinc-500"
+                          alt="Img"
+                        />
+                      ) : (
+                        <div className="w-10 h-10 rounded-lg bg-zinc-800 border border-zinc-700 mx-auto flex items-center justify-center text-zinc-600">
+                          <ImageIcon className="w-5 h-5" />
+                        </div>
+                      )}
+                    </td>
+                    <td className="p-4">
+                      <div className="font-mono text-sm font-bold text-primary group-hover:text-red-400">
+                        #{order.orderNo}
                       </div>
-                    )}
-                  </td>
-                  <td className="p-4 font-mono text-sm font-bold text-primary group-hover:text-red-400">
-                    #{order.orderNo}
-                  </td>
-                  <td className="p-4">
-                    <div className="font-bold text-zinc-200">{order.customerName}</div>
-                    {order.recipientName && (
+                      {order.dtfPrinted && (
+                        <div className="mt-1 inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase bg-purple-500/20 text-purple-400 border border-purple-500/30">
+                          <CheckCircleIcon className="w-2.5 h-2.5" /> DTF
+                        </div>
+                      )}
+                    </td>
+                    <td className="p-4">
+                      <div className="font-bold text-zinc-200">{order.customerName}</div>
+                      {order.recipientName && (
                         <div className="text-[10px] text-zinc-500">To: {order.recipientName}</div>
-                    )}
-                  </td>
-                  <td className="p-4 text-sm text-zinc-300">
-                    {order.productName}
-                    {order.description && (
+                      )}
+                    </td>
+                    <td className="p-4 text-sm text-zinc-300">
+                      {order.productName}
+                      {order.description && (
                         <div className="text-[10px] text-zinc-500 truncate max-w-[200px] italic">"{order.description}"</div>
-                    )}
-                  </td>
-                  <td className="p-4 text-center font-bold text-white">
-                    {order.quantity}
-                  </td>
-                  <td className="p-4 text-center">
-                    <StatusBadge status={order.status} size="sm" />
-                  </td>
-                  <td className="p-4 text-center">
-                      <div className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-[10px] font-bold uppercase ${
-                          order.channel === 'OFFLINE' 
-                          ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20' 
+                      )}
+                    </td>
+                    <td className="p-4 text-center font-bold text-white">
+                      {order.quantity}
+                    </td>
+                    <td className="p-4 text-center">
+                      <StatusBadge status={order.status} size="sm" />
+                    </td>
+                    <td className="p-4 text-center">
+                      <div className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-[10px] font-bold uppercase ${order.channel === 'OFFLINE'
+                          ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20'
                           : 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
-                      }`}>
-                          {order.channel === 'OFFLINE' ? <ZapIcon className="w-3 h-3" /> : <GlobeIcon className="w-3 h-3" />}
-                          {order.channel || 'ONLINE'}
+                        }`}>
+                        {order.channel === 'OFFLINE' ? <ZapIcon className="w-3 h-3" /> : <GlobeIcon className="w-3 h-3" />}
+                        {order.channel || 'ONLINE'}
                       </div>
-                  </td>
-                  <td className="p-4 text-right">
-                    <div className="text-xs text-zinc-400 font-medium">{formatDate(order.createdAt)}</div>
-                    <div className={`text-[10px] font-bold mt-0.5 ${ageInfo.colorClass}`}>
-                       {ageInfo.label}
-                    </div>
-                  </td>
-                </tr>
+                    </td>
+                    <td className="p-4 text-right">
+                      <div className="text-xs text-zinc-400 font-medium">{formatDate(order.createdAt)}</div>
+                      <div className={`text-[10px] font-bold mt-0.5 ${ageInfo.colorClass}`}>
+                        {ageInfo.label}
+                      </div>
+                    </td>
+                  </tr>
                 );
               })
             )}

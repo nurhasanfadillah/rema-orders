@@ -5,7 +5,7 @@ import { OrderForm } from './components/OrderForm';
 import { OrderDetail } from './components/OrderDetail';
 import { StatusBadge } from './components/StatusBadge';
 import { SearchableSelect } from './components/SearchableSelect';
-import { PlusIcon, SearchIcon, ChevronLeftIcon, ChevronRightIcon, SortDescIcon, SortAscIcon, DownloadIcon, InfoIcon, DatabaseIcon, ImageIcon, GlobeIcon, ZapIcon } from './components/icons';
+import { PlusIcon, SearchIcon, ChevronLeftIcon, ChevronRightIcon, SortDescIcon, SortAscIcon, DownloadIcon, InfoIcon, DatabaseIcon, ImageIcon, GlobeIcon, ZapIcon, CheckCircleIcon } from './components/icons';
 
 import { formatDate, mapRowToOrder, formatCurrency, generateOrderNo, getAllOrderFilePaths, getOrderAgeInfo } from './utils';
 import { supabase } from './supabase';
@@ -277,7 +277,8 @@ export default function App() {
             channel: payload.channel,
             recipient_name: payload.recipientName,
             recipient_phone: payload.recipientPhone,
-            address: payload.address
+            address: payload.address,
+            dtf_printed: payload.dtfPrinted
           }]);
           if (error) throw error;
         } else if (type === 'UPDATE' && orderId) {
@@ -296,7 +297,8 @@ export default function App() {
             channel: payload.channel,
             recipient_name: payload.recipientName,
             recipient_phone: payload.recipientPhone,
-            address: payload.address
+            address: payload.address,
+            dtf_printed: payload.dtfPrinted
           }).eq('id', orderId);
           if (error) throw error;
         }
@@ -405,7 +407,8 @@ export default function App() {
         channel: orderData.channel,
         recipient_name: orderData.recipientName,
         recipient_phone: orderData.recipientPhone,
-        address: orderData.address
+        address: orderData.address,
+        dtf_printed: orderData.dtfPrinted
       }]);
 
       if (error) throw error;
@@ -440,7 +443,8 @@ export default function App() {
           channel: orderData.channel,
           recipient_name: orderData.recipientName,
           recipient_phone: orderData.recipientPhone,
-          address: orderData.address
+          address: orderData.address,
+          dtf_printed: orderData.dtfPrinted
         })
         .eq('id', activeOrder.id);
 
@@ -479,6 +483,31 @@ export default function App() {
       // Update detail view if active
       if (activeOrder && activeOrder.id === id) {
         setActiveOrder({ ...activeOrder, status: newStatus });
+      }
+
+      fetchStatusCounts();
+    } catch (error: any) {
+      showToast(getErrorMessage(error), 'error');
+    }
+  };
+
+  const handleUpdateDtfPrinted = async (id: string, newStatus: boolean) => {
+    try {
+      const { error } = await supabase
+        .from('orders')
+        .update({ dtf_printed: newStatus, updated_at: new Date().toISOString() })
+        .eq('id', id);
+
+      if (error) throw error;
+
+      showToast(newStatus ? 'Telah ditandai Cetak DTF Selesai' : 'Status Cetak DTF dibatalkan', 'success');
+
+      // Update list locally
+      setOrders(orders.map(o => o.id === id ? { ...o, dtfPrinted: newStatus } : o));
+
+      // Update detail view if active
+      if (activeOrder && activeOrder.id === id) {
+        setActiveOrder({ ...activeOrder, dtfPrinted: newStatus });
       }
 
       fetchStatusCounts();
@@ -888,6 +917,7 @@ export default function App() {
                 order={activeOrder}
                 onBack={() => setView('LIST')}
                 onUpdateStatus={handleUpdateStatus}
+                onUpdateDtfPrinted={handleUpdateDtfPrinted}
                 onDelete={handleDeleteOrder}
                 onEdit={handleEditRequest}
                 onCopy={handleCopyOrder}
@@ -948,6 +978,11 @@ export default function App() {
                               <h3 className="font-bold text-zinc-100 line-clamp-1">{order.customerName}</h3>
                               <div className="flex items-center gap-2 mt-0.5">
                                 <span className="text-[10px] font-mono text-primary bg-primary/10 px-1.5 py-0.5 rounded border border-primary/20">#{order.orderNo}</span>
+                                {order.dtfPrinted && (
+                                  <span className="text-[9px] font-bold text-purple-400 bg-purple-500/10 px-1.5 py-0.5 rounded border border-purple-500/20 flex items-center gap-1">
+                                    <CheckCircleIcon className="w-2.5 h-2.5" /> DTF
+                                  </span>
+                                )}
                                 <span className={`text-[10px] ${ageInfo.colorClass}`}>
                                   {ageInfo.label}
                                 </span>

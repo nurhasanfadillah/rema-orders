@@ -155,9 +155,10 @@ export const mapRowToOrder = (row: OrderRow): Order => {
     createdAt: row.created_at ? new Date(row.created_at).getTime() : Date.now(),
     updatedAt: row.updated_at ? new Date(row.updated_at).getTime() : Date.now(),
     channel: row.channel || 'ONLINE', // Default to online for old data
-    recipientName: row.recipient_name || '',
-    recipientPhone: row.recipient_phone || '',
-    address: row.address || '',
+    recipientName: row.recipient_name,
+    recipientPhone: row.recipient_phone,
+    address: row.address,
+    dtfPrinted: row.dtf_printed || false,
   };
 };
 
