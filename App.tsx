@@ -676,13 +676,7 @@ export default function App() {
         </div>
 
         <div className="p-4 space-y-4 flex-1 overflow-y-auto">
-          <button
-            onClick={() => { setActiveOrder(null); setMode('create'); setView('FORM'); }}
-            className="w-full py-3.5 rounded-xl bg-primary hover:bg-primary-dark text-white font-bold shadow-lg shadow-primary/20 flex items-center justify-center gap-2 active:scale-95 transition-all"
-          >
-            <PlusIcon className="w-5 h-5" />
-            <span>Pesanan Baru</span>
-          </button>
+          {/* Button Pesanan Baru disembunyikan */}
 
           <div className="space-y-1 mt-6">
             <p className="px-4 text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2">Filter Status</p>
